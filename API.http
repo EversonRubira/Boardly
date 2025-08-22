@@ -1,0 +1,67 @@
+GET http://localhost:8080/api/projects/6886794fd17a0e7c6698ce25
+### Popula banco
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Everson",
+  "email": "everson@email.com",
+  "password": "123456",
+  "role": "ADMIN",
+  "avatarUrl": "https://imagem.com/avatar.jpg"
+}
+
+### Debug con notes
+POST http://localhost:8080/api/notes
+Content-Type: application/json
+
+{
+  "title": "Minha primeira nota",
+  "content": "Testando o fluxo com debug!"
+}
+
+### Debug com notes
+POST http://localhost:8080/api/notes
+Content-Type: application/json
+
+{
+  "title": "Estudo de Debug",
+  "content": "Testando a criação de nota com debug em todas as camadas."
+}
+
+### Criar projeto (sem auth, só se /api/projects estiver permitAll)
+POST http://localhost:8080/api/projects
+Content-Type: application/json
+
+{
+  "title": "Boardly MVP",
+  "description": "Segundo projeto com Clean Architecture",
+  "startDate": "2025-08-10",
+  "endDate": "2025-08-30"
+}
+
+### Listar projetos
+GET http://localhost:8080/api/projects
+Accept: application/json
+
+
+### Criar nova Task vinculada a um Projeto
+POST http://localhost:8080/api/tasks
+Content-Type: application/json
+Authorization: Bearer {{seu_token}}
+
+{
+  "title": "Criar layout do Kanban",
+  "assignee": "everson",
+  "projectId": "INSIRA_ID_DO_PROJETO_AQUI"
+}
+
+
+### Mover Task para DONE
+PUT http://localhost:8080/api/tasks/{{taskId}}/move
+Content-Type: application/json
+Authorization: Bearer {{seu_token}}
+
+{
+  "newStatus": "DONE"
+}

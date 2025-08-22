@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DevHelper – Checklist & Log Diário (Vanilla)</title>
+    <style>
+        :root{
+            --bg:#0b1220;--panel:#0e1726;--muted:#1b2742;--text:#e6eefc;--sub:#a7b4d6;--brand:#6aa3ff;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;
+            --br:14px;--pad:18px;
+        }
+        *{box-sizing:border-box}
+        body{
+            margin:0;padding:24px;background:linear-gradient(180deg,#0a1120 0%,#0b1220 100%);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial,'Noto Sans';
+        }
+        .container{max-width:1100px;margin:0 auto;display:grid;gap:18px}
+        .row{display:grid;gap:18px}
+        @media(min-width:980px){.row{grid-template-columns:1.2fr .8fr}}
+        .card{background:var(--panel);border:1px solid #16213f;border-radius:var(--br);padding:var(--pad);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+        .card h2{margin:0 0 10px;font-size:1.1rem;color:#eaf2ff;letter-spacing:.2px}
+        .muted{color:var(--sub);font-size:.9rem}
+        .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+        select,input[type="text"],input[type="date"],textarea{
+            background:#0b162f;color:var(--text);border:1px solid #1f2b4a;border-radius:10px;padding:10px 12px;outline:none;width:100%;
+        }
+        select:focus,input:focus,textarea:focus{border-color:#2a4480;box-shadow:0 0 0 3px rgba(106,163,255,.15)}
+        textarea{min-height:110px;resize:vertical}
+        .grid-2{display:grid;gap:12px}
+        @media(min-width:720px){.grid-2{grid-template-columns:1fr 1fr}}
+        .btn{
+            background:#12244a;color:#eaf2ff;border:1px solid #1e3364;border-radius:12px;padding:10px 14px;cursor:pointer;
+            transition:.15s;display:inline-flex;gap:8px;align-items:center;font-weight:600
+        }
+        .btn:hover{transform:translateY(-1px);background:#152b59}
+        .btn:active{transform:translateY(0)}
+        .btn.ok{border-color:#1f6d3a;background:#0f2b1a}
+        .btn.warn{border-color:#6b4b0f;background:#2a1c05}
+        .btn.danger{border-color:#6b1f1f;background:#2a0f0f}
+        .badge{display:inline-flex;gap:6px;align-items:center;font-size:.78rem;background:#0c1833;border:1px solid #1c2d57;color:#cfe1ff;border-radius:999px;padding:6px 10px}
+        .list{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+        .item{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid #1b2a53;border-radius:12px;background:#0b162f}
+        .item label{flex:1;cursor:pointer}
+        .item input[type="checkbox"]{margin-top:2px;transform:translateY(2px)}
+        .inline{display:flex;gap:10px}
+        .inline input[type="text"]{flex:1}
+        .right{margin-left:auto}
+        .footer{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:12px}
+        .small{font-size:.8rem}
+        .sep{height:1px;background:#18234a;margin:12px 0}
+        .save-indicator{font-size:.8rem;color:#9fb6e6}
+        .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;background:#0d1b38;border:1px solid #203464;border-radius:6px;padding:2px 6px}
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Cabeçalho -->
+    <div class="card">
+        <div class="toolbar">
+            <h1 style="margin:0;font-size:1.35rem;">DevHelper – Checklist & Log Diário</h1>
+            <span class="badge">v2 • Vanilla • Local</span>
+            <span class="save-indicator right" id="saveStatus">carregado</span>
+        </div>
+        <div class="grid-2">
+            <div class="toolbar">
+                <label class="muted">Data do log</label>
+                <input type="date" id="entryDate"/>
+            </div>
+            <div class="toolbar">
+                <label class="muted">Template de checklist</label>
+                <select id="templateSelect"></select>
+                <button class="btn" id="applyTemplateBtn" title="Aplicar template selecionado">Aplicar</button>
+                <button class="btn warn" id="clearChecklistBtn" title="Limpar checklist atual">Limpar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Checklist -->
+        <div class="card">
+            <h2>Checklist</h2>
+            <p class="muted small">Marque os itens conforme avança. Você pode adicionar itens personalizados abaixo.</p>
+            <ul class="list" id="checklist"></ul>
+            <div class="sep"></div>
+            <div class="inline">
+                <input type="text" id="customItem" placeholder="Adicionar item personalizado..." />
+                <button class="btn" id="addItemBtn">+ Adicionar</button>
+            </div>
+            <div class="footer">
+                <span class="muted small">Dica: pressione <span class="kbd">Enter</span> para adicionar rapidamente.</span>
+                <div class="inline">
+                    <button class="btn ok" id="exportMdBtn">Exportar Markdown</button>
+                    <button class="btn ok" id="exportJsonBtn">Backup JSON</button>
+                    <label class="btn" for="importJsonInput" title="Importar backup JSON">Importar JSON</label>
+                    <input id="importJsonInput" type="file" accept="application/json" style="display:none" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Log Diário -->
+        <div class="card">
+            <h2>Log Diário</h2>
+            <div class="toolbar">
+                <span class="muted">O log e o checklist são salvos por data automaticamente (localStorage).</span>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label class="muted">Feito</label>
+                    <textarea id="feito" placeholder="Ex: Criada classe ProjectService com método save()"></textarea>
+                </div>
+                <div>
+                    <label class="muted">Próximo</label>
+                    <textarea id="proximo" placeholder="Ex: Escrever testes unitários para ProjectService"></textarea>
+                </div>
+            </div>
+            <div style="margin-top:12px">
+                <label class="muted">Bloqueios</label>
+                <textarea id="bloqueios" placeholder="Ex: Erro 400 ao salvar DTO inválido"></textarea>
+            </div>
+            <div class="footer">
+                <div class="inline">
+                    <button class="btn" id="copyMdBtn" title="Copiar Markdown para a área de transferência">Copiar Markdown</button>
+                </div>
+                <span class="muted small" id="charsInfo">0 caracteres</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Histórico rápido -->
+    <div class="card">
+        <h2>Histórico Rápido</h2>
+        <p class="muted small">Clique para carregar um dia salvo.</p>
+        <div id="historyBar" class="toolbar" style="flex-wrap:wrap;"></div>
+    </div>
+</div>
+
+<script>
+    /* ========= Templates ========= */
+    const TEMPLATES = {
+        "Nova Classe Java":[
+            "Definir responsabilidade da classe",
+            "Listar atributos (visibilidade + tipos)",
+            "Criar construtor(es)",
+            "Getters/Setters (ou Lombok)",
+            "Dependências (injeção via @Service/@Repository)",
+            "Métodos públicos principais (assinaturas)",
+            "Validações (javax.validation)",
+            "Testes (unit/integration)",
+            "Anotações/JavaDoc essenciais"
+        ],
+        "Novo DTO":[
+            "Definir campos e tipos (imexíveis)",
+            "Adicionar validações (javax.validation)",
+            "Mapeamento Entity ↔ DTO (Mapper)",
+            "Atualizar Controller para usar DTO",
+            "Documentar no OpenAPI/Swagger"
+        ],
+        "Novo Service":[
+            "Definir interface (port) no application",
+            "Implementar service (use case) isolado",
+            "Cobrir regras de negócio e validações",
+            "Testes unitários do service",
+            "Injeção no Controller/Adapter"
+        ],
+        "Endpoint REST":[
+            "Definir contrato (método, path, payload, status)",
+            "Implementar Controller",
+            "Tratamento de erros (ExceptionHandler)",
+            "Testes com MockMvc",
+            "Documentar no Swagger"
+        ],
+        "Consultas Mongo":[
+            "Criar índices necessários",
+            "Definir query (Repository/Criteria)",
+            "Validar performance com dataset exemplo",
+            "Testes de integração com Mongo Testcontainers"
+        ]
+    };
+
+    /* ========= Estado & Helpers ========= */
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    const LS_KEY = "devhelper.v2";
+    const QS = {
+        checklist: $("#checklist"),
+        templateSelect: $("#templateSelect"),
+        applyTemplateBtn: $("#applyTemplateBtn"),
+        clearChecklistBtn: $("#clearChecklistBtn"),
+        customItem: $("#customItem"),
+        addItemBtn: $("#addItemBtn"),
+        feito: $("#feito"),
+        proximo: $("#proximo"),
+        bloqueios: $("#bloqueios"),
+        exportMdBtn: $("#exportMdBtn"),
+        exportJsonBtn: $("#exportJsonBtn"),
+        importJsonInput: $("#importJsonInput"),
+        copyMdBtn: $("#copyMdBtn"),
+        entryDate: $("#entryDate"),
+        historyBar: $("#historyBar"),
+        charsInfo: $("#charsInfo"),
+        saveStatus: $("#saveStatus"),
+    };
+
+    function todayISO(){
+        const d=new Date();
+        const off=d.getTimezoneOffset();
+        const d2=new Date(d.getTime()-off*60000);
+        return d2.toISOString().slice(0,10);
+    }
+
+    function readAll(){
+        try{ return JSON.parse(localStorage.getItem(LS_KEY)) || {}; }
+        catch(e){ return {}; }
+    }
+    function writeAll(data){
+        localStorage.setItem(LS_KEY, JSON.stringify(data));
+        flashSaved();
+        renderHistory();
+    }
+    function readDay(key){
+        const all=readAll();
+        return all[key] || { checklist:[], notes:{feito:"",proximo:"",bloqueios:""} };
+    }
+    function writeDay(key, dayData){
+        const all=readAll();
+        all[key]=dayData;
+        writeAll(all);
+    }
+    function flashSaved(){
+        QS.saveStatus.textContent="salvo ✔";
+        setTimeout(()=>QS.saveStatus.textContent="—",1200);
+    }
+
+    /* ========= Render ========= */
+    function renderTemplateOptions(){
+        QS.templateSelect.innerHTML = Object.keys(TEMPLATES)
+            .map(name=>`<option value="${name}">${name}</option>`).join("");
+    }
+
+    function renderChecklist(items){
+        QS.checklist.innerHTML = "";
+        items.forEach((it,idx)=>{
+            const li=document.createElement("li");
+            li.className="item";
+            li.innerHTML=`
+          <input type="checkbox" ${it.done?"checked":""} data-idx="${idx}" />
+          <label>${escapeHtml(it.text)}</label>
+          <button class="btn danger" data-del="${idx}" title="Remover item">Remover</button>
+        `;
+            QS.checklist.appendChild(li);
+        });
+    }
+
+    function renderHistory(){
+        const all=readAll();
+        const keys=Object.keys(all).sort().reverse().slice(0,30);
+        QS.historyBar.innerHTML = keys.map(k=>{
+            const done = (all[k].checklist||[]).filter(i=>i.done).length;
+            const total = (all[k].checklist||[]).length||0;
+            const pct = total? Math.round(done*100/total) : 0;
+            return `<button class="btn" data-load="${k}" title="${done}/${total} concluídos">${k} • ${pct}%</button>`;
+        }).join("") || `<span class="muted small">Sem histórico ainda.</span>`;
+    }
+
+    function escapeHtml(s){
+        return s.replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+    }
+
+    function currentKey(){ return QS.entryDate.value || todayISO(); }
+
+    function loadDayIntoUI(key){
+        const data = readDay(key);
+        renderChecklist(data.checklist || []);
+        QS.feito.value = data.notes?.feito || "";
+        QS.proximo.value = data.notes?.proximo || "";
+        QS.bloqueios.value = data.notes?.bloqueios || "";
+        updateCharsInfo();
+    }
+
+    function gatherUI(){
+        const items = $$("#checklist .item").map((li,i)=>{
+            const cb = li.querySelector('input[type="checkbox"]');
+            const text = li.querySelector('label').textContent.trim();
+            return { text, done: !!cb.checked };
+        });
+        return {
+            checklist: items,
+            notes: {
+                feito: QS.feito.value.trim(),
+                proximo: QS.proximo.value.trim(),
+                bloqueios: QS.bloqueios.value.trim(),
+            }
+        };
+    }
+
+    /* ========= Export / Import ========= */
+    function makeMarkdown(key, data){
+        const checklist = (data.checklist||[])
+            .map(i=>`- [${i.done?'x':' '}] ${i.text}`).join("\n") || "- (vazio)";
+        const feito = data.notes?.feito || "(vazio)";
+        const proximo = data.notes?.proximo || "(vazio)";
+        const bloqueios = data.notes?.bloqueios || "(vazio)";
+        return `# DevHelper – ${key}
+## Checklist
+${checklist}
+
+## Log Diário
+### Feito
+${feito}
+
+### Próximo
+${proximo}
+
+### Bloqueios
+${bloqueios}
+`;
+    }
+    function download(filename, content, type){
+        const blob=new Blob([content],{type});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement("a");
+        a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url);
+    }
+
+    /* ========= Eventos ========= */
+    function attachEvents(){
+        QS.applyTemplateBtn.addEventListener("click", ()=>{
+            const name = QS.templateSelect.value;
+            const base = (TEMPLATES[name]||[]).map(t=>({text:t,done:false}));
+            renderChecklist(base);
+            writeDay(currentKey(), {...readDay(currentKey()), checklist: base});
+        });
+
+        QS.clearChecklistBtn.addEventListener("click", ()=>{
+            if(!confirm("Limpar checklist atual?")) return;
+            renderChecklist([]);
+            writeDay(currentKey(), {...readDay(currentKey()), checklist: []});
+        });
+
+        QS.addItemBtn.addEventListener("click", ()=>{
+            const val = QS.customItem.value.trim();
+            if(!val) return;
+            const day = readDay(currentKey());
+            const updated = [...(day.checklist||[]), {text:val, done:false}];
+            renderChecklist(updated);
+            QS.customItem.value="";
+            writeDay(currentKey(), {...day, checklist: updated});
+        });
+        QS.customItem.addEventListener("keydown",(e)=>{
+            if(e.key==="Enter"){ e.preventDefault(); QS.addItemBtn.click(); }
+        });
+
+        QS.checklist.addEventListener("change",(e)=>{
+            if(e.target.matches('input[type="checkbox"]')){
+                const idx = Number(e.target.dataset.idx);
+                const day = readDay(currentKey());
+                if(day.checklist[idx]) day.checklist[idx].done = e.target.checked;
+                writeDay(currentKey(), day);
+            }
+        });
+        QS.checklist.addEventListener("click",(e)=>{
+            const del = e.target.getAttribute("data-del");
+            if(del!=null){
+                const idx = Number(del);
+                const day = readDay(currentKey());
+                day.checklist.splice(idx,1);
+                renderChecklist(day.checklist);
+                writeDay(currentKey(), day);
+            }
+        });
+
+        ["feito","proximo","bloqueios"].forEach(id=>{
+            QS[id].addEventListener("input", ()=>{
+                const day = readDay(currentKey());
+                day.notes = {
+                    feito: QS.feito.value, proximo: QS.proximo.value, bloqueios: QS.bloqueios.value
+                };
+                writeDay(currentKey(), day);
+                updateCharsInfo();
+            });
+        });
+
+        QS.exportMdBtn.addEventListener("click", ()=>{
+            const key = currentKey();
+            const data = readDay(key);
+            download(`devhelper-${key}.md`, makeMarkdown(key, data), "text/markdown");
+        });
+
+        QS.copyMdBtn.addEventListener("click", async ()=>{
+            const key=currentKey();
+            const md=makeMarkdown(key, readDay(key));
+            try{ await navigator.clipboard.writeText(md); QS.saveStatus.textContent="Markdown copiado ✓"; }
+            catch{ QS.saveStatus.textContent="não foi possível copiar :("; }
+            setTimeout(()=>QS.saveStatus.textContent="—",1200);
+        });
+
+        QS.exportJsonBtn.addEventListener("click", ()=>{
+            download(`devhelper-backup.json`, JSON.stringify(readAll(),null,2), "application/json");
+        });
+
+        QS.importJsonInput.addEventListener("change", async (e)=>{
+            const file=e.target.files?.[0]; if(!file) return;
+            const text=await file.text();
+            try{
+                const obj=JSON.parse(text);
+                if(typeof obj!=="object" || Array.isArray(obj)) throw new Error("Formato inválido");
+                writeAll(obj);
+                // Recarrega dia atual
+                loadDayIntoUI(currentKey());
+                alert("Backup importado com sucesso.");
+            }catch(err){
+                alert("Falha ao importar JSON: "+err.message);
+            }finally{
+                e.target.value="";
+            }
+        });
+
+        QS.entryDate.addEventListener("change", ()=>{
+            loadDayIntoUI(currentKey());
+        });
+
+        QS.historyBar.addEventListener("click",(e)=>{
+            const k=e.target.getAttribute("data-load");
+            if(k){ QS.entryDate.value=k; loadDayIntoUI(k); }
+        });
+    }
+
+    function updateCharsInfo(){
+        const total = (QS.feito.value+QS.proximo.value+QS.bloqueios.value).length;
+        QS.charsInfo.textContent = `${total} caracteres`;
+    }
+
+    /* ========= Boot ========= */
+    (function init(){
+        renderTemplateOptions();
+        QS.entryDate.value = todayISO();
+        renderHistory();
+        loadDayIntoUI(currentKey());
+        attachEvents();
+        QS.saveStatus.textContent="pronto";
+    })();
+</script>
+</body>
+</html>

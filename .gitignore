@@ -1,0 +1,21 @@
+# Java
+*.class
+*.log
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+out/
+
+# Maven
+target/
+.settings/
+.cache/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Credenciais
+.env
