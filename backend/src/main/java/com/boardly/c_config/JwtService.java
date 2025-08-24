@@ -7,7 +7,9 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,10 @@ public class JwtService {
     private static final String SECRET_KEY = "secret-key-para-o-jwt-super-seguro-e-longo-1234567890";
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    //    return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        byte[] secretBytes = Base64.getEncoder().encode(JwtService.SECRET_KEY.getBytes());
+        Key validationKey = new SecretKeySpec(secretBytes, "HmacSHA256");
+        return validationKey;
     }
 
     public String extractUsername(String token) {
@@ -43,7 +48,7 @@ public class JwtService {
                 .setSubject(userDetails.getUsername()) // normalmente o e-mail
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encode(JwtService.SECRET_KEY.getBytes()))
                 .compact();
     }
 

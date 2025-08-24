@@ -11,44 +11,12 @@ Content-Type: application/json
   "avatarUrl": "https://imagem.com/avatar.jpg"
 }
 
-### Debug con notes
-POST http://localhost:8080/api/notes
-Content-Type: application/json
-
-{
-  "title": "Minha primeira nota",
-  "content": "Testando o fluxo com debug!"
-}
-
-### Debug com notes
-POST http://localhost:8080/api/notes
-Content-Type: application/json
-
-{
-  "title": "Estudo de Debug",
-  "content": "Testando a criação de nota com debug em todas as camadas."
-}
-
-### Criar projeto (sem auth, só se /api/projects estiver permitAll)
-POST http://localhost:8080/api/projects
-Content-Type: application/json
-
-{
-  "title": "Boardly MVP",
-  "description": "Segundo projeto com Clean Architecture",
-  "startDate": "2025-08-10",
-  "endDate": "2025-08-30"
-}
-
-### Listar projetos
-GET http://localhost:8080/api/projects
-Accept: application/json
 
 
 ### Criar nova Task vinculada a um Projeto
 POST http://localhost:8080/api/tasks
 Content-Type: application/json
-Authorization: Bearer {{seu_token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldmVyc29uQGVtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJFdmVyc29uIiwiaWF0IjoxNzU2MDU0MjAxLCJleHAiOjE3NTYxNDA2MDF9.tz7As-8iDCy8RVhvC_lifXAGaTbsXTZqRn6pdFVU_1Q
 
 {
   "title": "Criar layout do Kanban",
@@ -57,11 +25,12 @@ Authorization: Bearer {{seu_token}}
 }
 
 
-### Mover Task para DONE
-PUT http://localhost:8080/api/tasks/{{taskId}}/move
+
+### Autenticação
+POST http://localhost:8080/api/auth/login
 Content-Type: application/json
-Authorization: Bearer {{seu_token}}
 
 {
-  "newStatus": "DONE"
+  "email": "everson@email.com",
+  "password": "123456"
 }
