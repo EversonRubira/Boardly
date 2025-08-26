@@ -1,8 +1,8 @@
 package com.boardly.config;
 
-import com.boardly.adapters.out.ProjectRepositoryAdapter;
-import com.boardly.adapters.out.SpringDataProjectRepository;
-import com.boardly.adapters.out.mapper.ProjectMongoMapper;
+import com.boardly.adapters.out.repository.ProjectRepositoryAdapter;
+import com.boardly.adapters.out.mongo.repository.SpringDataProjectRepository;
+import com.boardly.adapters.out.mongo.mapper.ProjectMongoMapper;
 import com.boardly.application.service.*;
 import com.boardly.application.usecase.*;
 import com.boardly.application.usecase.CreateTaskUseCase;

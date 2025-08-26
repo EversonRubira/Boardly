@@ -1,7 +1,6 @@
 package com.boardly.g_mapper;
 
 import com.boardly.e_model.Note;
-import com.boardly.f_dto.note.NoteDTO;
 
 public class NoteMapper {
 

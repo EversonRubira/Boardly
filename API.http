@@ -4,8 +4,8 @@ POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 
 {
-  "name": "Everson",
-  "email": "everson@email.com",
+  "name": "Claudia",
+  "email": "claudia@email.com",
   "password": "123456",
   "role": "ADMIN",
   "avatarUrl": "https://imagem.com/avatar.jpg"
@@ -16,7 +16,7 @@ Content-Type: application/json
 ### Criar nova Task vinculada a um Projeto
 POST http://localhost:8080/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldmVyc29uQGVtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJFdmVyc29uIiwiaWF0IjoxNzU2MDU0MjAxLCJleHAiOjE3NTYxNDA2MDF9.tz7As-8iDCy8RVhvC_lifXAGaTbsXTZqRn6pdFVU_1Q
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjbGF1ZGlhQGVtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJDbGF1ZGlhIiwiaWF0IjoxNzU2MDU5MjMyLCJleHAiOjE3NTYxNDU2MzJ9.BnUWOrVy-nlVboGcF15SIf1wpEJ2yCqcdCbEVTJslqA
 
 {
   "title": "Criar layout do Kanban",
@@ -31,6 +31,6 @@ POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "everson@email.com",
+  "email": "claudia@email.com",
   "password": "123456"
 }

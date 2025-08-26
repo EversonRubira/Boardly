@@ -1,4 +1,4 @@
-package com.boardly.adapters.out.mapper;
+package com.boardly.adapters.out.mongo.mapper;
 
 import java.util.stream.Collectors;
 import java.util.List;

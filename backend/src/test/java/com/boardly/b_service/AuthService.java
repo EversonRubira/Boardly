@@ -4,7 +4,6 @@ import com.boardly.b_service.jwt.JwtUtil;
 import com.boardly.d_repository.UserRepository;
 import com.boardly.e_model.User;
 import com.boardly.f_dto.auth.AuthRequest;
-import com.boardly.f_dto.auth.AuthResponse;
 import com.boardly.f_dto.auth.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

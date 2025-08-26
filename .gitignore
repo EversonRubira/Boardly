@@ -1,21 +1,13 @@
-# Java
-*.class
-*.log
-
-# IntelliJ
-.idea/
-*.iml
-*.iws
-out/
-
-# Maven
+# pastas de build
 target/
-.settings/
-.cache/
+/out/
+node_modules/
 
-# Sistema
+# caches de IDE
+.idea/
+.vscode/
+
+# arquivos temporários
+*.log
 .DS_Store
 Thumbs.db
-
-# Credenciais
-.env
