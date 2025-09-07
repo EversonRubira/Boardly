@@ -1,6 +1,6 @@
 GET http://localhost:8080/api/projects/6886794fd17a0e7c6698ce25
 ### Popula banco
-POST http://localhost:8080/api/auth/register
+POST http://localhost:8080/api/dev/users
 Content-Type: application/json
 
 {
@@ -21,7 +21,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjbGF1ZGlhQGVtYWlsLmNvbSIsI
 {
   "title": "Criar layout do Kanban",
   "assignee": "everson",
-  "projectId": "INSIRA_ID_DO_PROJETO_AQUI"
+  "projectId": "68bd58cc756b6b7a461cd53c"
 }
 
 
@@ -47,4 +47,24 @@ Content-Type: application/json
   "avatarUrl": null
 }
 
+### Criacao de um Porjeto
+POST http://localhost:8080/api/projects
+Content-Type: application/json
+Authorization: Bearer <SEU_TOKEN_VALIDO>
 
+{
+"title": "Boardly - MVP",
+"description": "Projeto inicial para testar o fluxo de criação de tasks",
+"startDate": "2025-09-07",
+"endDate": "2025-09-30"
+}
+
+
+### Visualizacao do projeto
+GET http://localhost:8080/api/projects/68bd58cc756b6b7a461cd53c
+
+###Teste API OpenAI no Codigo
+POST http://localhost:8080/api/ai/ask
+Content-Type: application/json
+
+{ "question": "Como estruturo o módulo de autenticação com Clean Architecture e MongoDB?" }
