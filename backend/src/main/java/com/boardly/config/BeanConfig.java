@@ -1,9 +1,11 @@
 package com.boardly.config;
 
+import com.boardly.adapters.out.mongo.repository.SpringDataUserRepository;
 import com.boardly.adapters.out.repository.ProjectRepositoryAdapter;
 import com.boardly.adapters.out.mongo.repository.SpringDataProjectRepository;
 import com.boardly.adapters.out.mongo.mapper.ProjectMongoMapper;
-import com.boardly.application.service.*;
+import com.boardly.adapters.out.repository.UserRepositoryAdapter;
+import com.boardly.application.auth.*;
 import com.boardly.application.usecase.*;
 import com.boardly.application.usecase.CreateTaskUseCase;
 import com.boardly.domain.repository.ProjectRepositoryPort;
@@ -12,6 +14,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BeanConfig {
+
+
+
 
     @Bean
     ProjectRepositoryPort projectRepositoryPort(SpringDataProjectRepository springRepo, ProjectMongoMapper mapper) {

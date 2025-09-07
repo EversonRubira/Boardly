@@ -34,3 +34,17 @@ Content-Type: application/json
   "email": "claudia@email.com",
   "password": "123456"
 }
+
+### Autenticação
+POST http://localhost:8080/api/dev/users
+Content-Type: application/json
+
+{
+  "name": "Everson",
+  "email": "everson@email.com",
+  "password": "123456",
+  "role": "ADMIN",
+  "avatarUrl": null
+}
+
+

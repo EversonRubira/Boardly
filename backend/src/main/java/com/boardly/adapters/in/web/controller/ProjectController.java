@@ -2,8 +2,11 @@ package com.boardly.adapters.in.web.controller;
 
 import com.boardly.adapters.in.web.dto.project.DetailsProjectResponse;
 import com.boardly.application.usecase.*;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 import java.util.List;
 import com.boardly.domain.model.Task;
 import com.boardly.adapters.in.web.dto.task.TaskResponse;
@@ -12,6 +15,7 @@ import com.boardly.adapters.in.web.dto.project.CreateProjectRequest;
 import com.boardly.adapters.in.web.dto.project.ListProjectResponse;
 import com.boardly.domain.model.Project;
 import com.boardly.adapters.in.web.dto.project.UpdateProjectRequest;
+
 
 
 @RestController
@@ -29,6 +33,7 @@ public class ProjectController {
                              FindProjectByIdUseCase findProjectByIdUseCase,
                              UpdateProjectUseCase updateProjectUseCase,
                              DeleteProjectUseCase deleteProjectUseCase) {
+
         this.createProject = createProject;
         this.listProjects = listProjects;
         this.findProjectByIdUseCase = findProjectByIdUseCase;
@@ -37,13 +42,23 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<ListProjectResponse> create(@RequestBody CreateProjectRequest req) {
+    public ResponseEntity<ListProjectResponse> create(@Valid @RequestBody CreateProjectRequest req) {
         var out = createProject.execute(
                 new CreateProjectUseCase.Input(req.title(), req.description(), req.startDate(), req.endDate())
         );
-        return ResponseEntity.ok(
-                new ListProjectResponse(out.id(), out.title(), req.description(), req.startDate(), req.endDate()));
+
+        var body = new ListProjectResponse(
+                out.id(),
+                out.title(),
+                out.description(),
+                out.startDate(),
+                out.endDate()
+        );
+
+        var location = URI.create("/projects/" + out.id());
+        return ResponseEntity.created(location).body(body);
     }
+
 
     @GetMapping
     public ResponseEntity<List<ListProjectResponse>> list() {
@@ -83,14 +98,14 @@ public class ProjectController {
     private DetailsProjectResponse toDetailsResponse(Project p){
         List<TaskResponse> tasks = p.getTasks()==null? List.of() :
                 p.getTasks().stream().map(this::toTaskResponse).toList();
-        return DetailsProjectResponse.builder()
-                .id(p.getId())
-                .title(p.getTitle())
-                .description(p.getDescription())
-                .startDate(p.getStartDate())
-                .endDate(p.getEndDate())
-                .tasks(tasks)
-                .build();
+        return new DetailsProjectResponse(
+                p.getId(),
+                p.getTitle(),
+                p.getDescription(),
+                p.getStartDate(),
+                p.getEndDate(),
+                tasks
+        );
     }
 
     private TaskResponse toTaskResponse(Task t){

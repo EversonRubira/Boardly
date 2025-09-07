@@ -1,4 +1,4 @@
-package com.boardly.application.service;
+package com.boardly.application.auth;
 
 import com.boardly.application.usecase.CreateProjectUseCase;
 import com.boardly.domain.model.Project;
@@ -15,6 +15,6 @@ public class CreateProjectService implements CreateProjectUseCase {
     public Output execute(Input in) {
         Project project = new Project(in.title(), in.description(), in.startDate(), in.endDate());
         Project saved = projectRepo.save(project);
-        return new Output(saved.getId(), saved.getTitle());
+        return new Output(saved.getId(), saved.getTitle(), saved.getDescription(), saved.getStartDate(), saved.getEndDate());
     }
 }

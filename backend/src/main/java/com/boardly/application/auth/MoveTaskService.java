@@ -1,4 +1,4 @@
-package com.boardly.application.service;
+package com.boardly.application.auth;
 
 import com.boardly.adapters.in.web.dto.task.TaskMoveRequest;
 import com.boardly.adapters.in.web.dto.task.TaskResponse;

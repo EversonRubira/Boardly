@@ -1,4 +1,6 @@
 package com.boardly.domain.model;
 
-public class Role {
+public enum Role {
+    ADMIN, MEMBER
 }
+

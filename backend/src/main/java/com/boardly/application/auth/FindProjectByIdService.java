@@ -1,4 +1,4 @@
-package com.boardly.application.service;
+package com.boardly.application.auth;
 
 import com.boardly.application.usecase.FindProjectByIdUseCase;
 import com.boardly.domain.model.Project;

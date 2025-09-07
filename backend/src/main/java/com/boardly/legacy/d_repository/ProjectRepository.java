@@ -1,6 +1,7 @@
-package com.boardly.d_repository;
+package com.boardly.legacy.d_repository;
 
-import com.boardly.e_model.Project;
+
+import com.boardly.domain.model.Project;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

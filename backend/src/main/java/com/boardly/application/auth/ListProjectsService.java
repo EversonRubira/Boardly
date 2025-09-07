@@ -1,4 +1,4 @@
-package com.boardly.application.service;
+package com.boardly.application.auth;
 
 import java.util.List;
 import java.util.stream.Collectors;
