@@ -1,7 +1,7 @@
 package com.boardly.application.auth;
 
 import com.boardly.application.usecase.DeleteProjectUseCase;
-import com.boardly.domain.repository.ProjectRepositoryPort;
+import com.boardly.application.ports.ProjectRepositoryPort;
 
 // com.boardly.application.service.DeleteProjectService
 public class DeleteProjectService implements DeleteProjectUseCase {

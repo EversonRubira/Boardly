@@ -8,7 +8,7 @@ import com.boardly.adapters.out.mongo.repository.SpringDataProjectRepository;
 import com.boardly.adapters.out.mongo.document.ProjectDocument;
 import com.boardly.adapters.out.mongo.mapper.ProjectMongoMapper;
 import com.boardly.domain.model.Project;
-import com.boardly.domain.repository.ProjectRepositoryPort;
+import com.boardly.application.ports.ProjectRepositoryPort;
 
 public class ProjectRepositoryAdapter implements ProjectRepositoryPort {
     private final SpringDataProjectRepository repo;

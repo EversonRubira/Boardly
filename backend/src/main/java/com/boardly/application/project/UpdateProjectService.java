@@ -2,7 +2,7 @@ package com.boardly.application.auth;
 
 import com.boardly.application.usecase.UpdateProjectUseCase;
 import com.boardly.domain.model.Project;
-import com.boardly.domain.repository.ProjectRepositoryPort;
+import com.boardly.application.ports.ProjectRepositoryPort;
 
 // com.boardly.application.service.UpdateProjectService
 public class UpdateProjectService implements UpdateProjectUseCase {

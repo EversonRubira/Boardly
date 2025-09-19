@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import com.boardly.application.usecase.ListProjectsUseCase;
 import com.boardly.domain.model.Project;
-import com.boardly.domain.repository.ProjectRepositoryPort;
+import com.boardly.application.ports.ProjectRepositoryPort;
 
 public class ListProjectsService implements ListProjectsUseCase {
     private final ProjectRepositoryPort projectRepo;

@@ -4,7 +4,7 @@ import com.boardly.adapters.out.mongo.document.UserDocument;
 import com.boardly.adapters.out.mongo.mapper.UserMongoMapper;
 import com.boardly.adapters.out.mongo.repository.SpringDataUserRepository;
 import com.boardly.domain.model.User;
-import com.boardly.domain.repository.UserRepositoryPort;
+import com.boardly.application.ports.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

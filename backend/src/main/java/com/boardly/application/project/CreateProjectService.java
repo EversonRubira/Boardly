@@ -2,7 +2,7 @@ package com.boardly.application.auth;
 
 import com.boardly.application.usecase.CreateProjectUseCase;
 import com.boardly.domain.model.Project;
-import com.boardly.domain.repository.ProjectRepositoryPort;
+import com.boardly.application.ports.ProjectRepositoryPort;
 
 public class CreateProjectService implements CreateProjectUseCase {
     private final ProjectRepositoryPort projectRepo;

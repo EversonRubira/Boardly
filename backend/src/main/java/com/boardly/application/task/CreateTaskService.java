@@ -6,7 +6,7 @@ import com.boardly.application.usecase.CreateTaskUseCase;
 import com.boardly.domain.common.Status;
 import com.boardly.domain.model.Project;
 import com.boardly.domain.model.Task;
-import com.boardly.domain.repository.ProjectRepositoryPort;
+import com.boardly.application.ports.ProjectRepositoryPort;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

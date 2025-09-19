@@ -2,7 +2,7 @@ package com.boardly.application.auth;
 
 import com.boardly.application.usecase.FindProjectByIdUseCase;
 import com.boardly.domain.model.Project;
-import com.boardly.domain.repository.ProjectRepositoryPort;
+import com.boardly.application.ports.ProjectRepositoryPort;
 
 // com.boardly.application.service.FindProjectByIdService
 public class FindProjectByIdService implements FindProjectByIdUseCase {
